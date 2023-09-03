@@ -3,7 +3,8 @@
 </script>
 
 <template>
-  <main>
-
-  </main>
+    <section>
+        <h1>Seja bem vindo</h1>
+        
+    </section>
 </template>
