@@ -6,6 +6,6 @@ const server = express()
 server.use(express.json())
 
 server.post('/register', UserController.newUser)
-server.post('/getUser', UserController.getUser)
+server.get('/login', UserController.login)
 
 server.listen(3000)

@@ -4,24 +4,33 @@ class UserController{
     newUser(req, res){
         const {name, username, email, password} = req.body
 
-        console.log(name, username, email, password)
-
         database.insert({name, username, email, password}).table("users").then(data => {
             res.json({message: "Usuário criado com sucesso!"})
         }).catch(error => {
             console.log(error)
         })
     }
-    getUser(req, res){
-        const {email, password} = req.body
-        console.log(email, password)
+    login(req, res){
+        const {email, password} = req.query
 
-        database.select("*").table("users").where({email:email}).then(user=>{
-            res.json({user})
+        database.select("password").table("users").where({email: email}).then(user => {
+            if(user.length > 0){
+                user[0].password = user[0].password.trim()
+                if(password == user[0].password){
+                    res.json({message: "Accepted"})
+                }else{
+                    res.json({message: "Wrong password"})
+                }
+            }else{
+                res.json({message: "User Not Found"})
+            }
         }).catch(error => {
             console.log(error)
         })
+
     }
+
+
 }
 
 module.exports = new UserController()
