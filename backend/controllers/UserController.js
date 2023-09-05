@@ -5,13 +5,14 @@ class UserController{
         const {name, username, email, password} = req.body
 
         database.insert({name, username, email, password}).table("users").then(data => {
-            res.json({message: "Usuário criado com sucesso!"})
+            res.json({message: "User registered"})
         }).catch(error => {
             console.log(error)
         })
     }
     login(req, res){
         const {email, password} = req.query
+        console.log(email, password)
 
         database.select("password").table("users").where({email: email}).then(user => {
             if(user.length > 0){
@@ -27,10 +28,7 @@ class UserController{
         }).catch(error => {
             console.log(error)
         })
-
     }
-
-
 }
 
 module.exports = new UserController()

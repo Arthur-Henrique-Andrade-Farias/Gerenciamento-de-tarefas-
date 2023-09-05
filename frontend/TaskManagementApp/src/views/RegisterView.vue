@@ -1,11 +1,24 @@
 <script setup>
 
 import {reactive} from 'vue'
+import router from "@/router";
 
 const user = reactive({});
 
 function register(){
-    console.log(user.name,user.email,user.password)
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user)
+  }
+  fetch("/register", requestOptions)
+  .then(response => response.json())
+  .then(data => {
+    if(data.message === "User registered"){
+      router.back()
+    }
+  })
+
 }
 
 </script>
@@ -22,6 +35,6 @@ function register(){
       <input type="text" placeholder="Nome de usuário" v-model="user.username" required>
       <label>Nome:</label>
       <input type="text" placeholder="Nome" v-model="user.name" required>
-      <button @click="register()">Cadastrar</button>
+      <button @click="register">Cadastrar</button>
     </section>
 </template>
