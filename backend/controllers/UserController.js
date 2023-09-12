@@ -4,14 +4,14 @@ class UserController {
     newUser(req, res) {
         const { name, username, email, password } = req.body
 
-        database.insert({ name, username, email, password }).table("users").then(data => {
-            res.json({ message: "User registered" })
+        database.insert({ name, username, email, password }).table("users").returning("userid").then(data => {
+            res.json({ message: "User registered", userid: data[0].userid })
         }).catch(error => {
             console.log(error)
         })
     }
     login(req, res) {
-        const { email, password } = req.query
+        const { email, password } = req.body
 
         database.select("password").table("users").where({ email: email }).then(user => {
             if (user.length > 0) {
@@ -26,6 +26,15 @@ class UserController {
             }
         }).catch(error => {
             console.log(error)
+        })
+    }
+    removeUser(req, res){
+        const { name, username, email, password } = req.body
+        database('users').where({email: email, username:username, name:name, password:password}).del()
+        .then(user => {
+            res.json({message: "User Removed"})
+        }).catch(error => {
+            console.log|(error)
         })
     }
 }
