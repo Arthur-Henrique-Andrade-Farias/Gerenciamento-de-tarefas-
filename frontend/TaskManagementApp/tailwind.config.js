@@ -15,7 +15,7 @@ module.exports = {
       }
     },
     fontFamily: {
-      'body': [
+    'body': [
     'Inter', 
     'ui-sans-serif', 
     'system-ui', 
@@ -32,7 +32,7 @@ module.exports = {
     'Segoe UI Symbol', 
     'Noto Color Emoji'
   ],
-      'sans': [
+    'sans': [
     'Inter', 
     'ui-sans-serif', 
     'system-ui', 
