@@ -33,3 +33,49 @@ a,
     padding: 0 2rem;
   }
 }
+html {
+  font-family:  'Nunito';
+}
+
+body {
+  background-color: #130f0d;
+  color: #fff;
+}
+
+.dropzone {
+  min-width: 282px;
+  min-height: 200px;
+}
+
+.status.green {
+  background-color: #23d2ac;
+}
+
+.status.blue {
+  background-color: #33adff;
+}
+
+.status.red {
+  background-color: red;
+}
+
+.highlight {
+  background-color: #fd951f08;
+}
+
+.card, .dropzone {
+  transition: 400ms;
+}
+
+.is-dragging {
+  cursor: move;
+  opacity: 0.3;
+}
+
+.over {
+  background-color: #4cd13711;
+}
+
+.line-through{
+  text-decoration: line-through;
+}
