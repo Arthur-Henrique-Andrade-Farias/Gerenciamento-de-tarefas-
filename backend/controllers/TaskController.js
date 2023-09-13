@@ -3,22 +3,32 @@ const database = require('../database/connection')
 class TaskController {
     newTask(req, res) {
 
-        const { userid, title, description, completion_status, tags } = req.body
+        if(req.session.authenticated){
+            const {title, description, completion_status, tags } = req.body
+            const userid = req.session.userid
 
-        database.insert({ userid, title, description, completion_status, tags }).table("tasks").returning("id").then(data => {
-            res.json({ message: "Task registered", taskid: data[0].id})
-        }).catch(error => {
-            console.log(error)
-        })
+    
+            database.insert({ userid, title, description, completion_status, tags }).table("tasks").returning("id").then(data => {
+                res.json({ message: "Task registered", taskid: data[0].id})
+            }).catch(error => {
+                console.log(error)
+            })
+        }else{
+            res.json({message: "User not authenticated"})
+        }
     }
     getTasks(req, res) {
-        const { userid } = req.query
-
-        database.select("title").select("description").select("completion_status").select("tags").table("tasks").where({ userid: userid }).then(tasks => {
-            res.json(tasks)
-        }).catch(error => {
-            console.log(error)
-        })
+        if(req.session.authenticated){
+            const  userid  = req.session.userid
+    
+            database.select("title").select("description").select("completion_status").select("tags").select("id").table("tasks").where({ userid: userid }).then(tasks => {
+                res.json(tasks)
+            }).catch(error => {
+                console.log(error)
+            })
+        }else{
+            res.json({message: "User not authenticated"})
+        }
     }
     removeTask(req, res) {
         const { taskId } = req.body

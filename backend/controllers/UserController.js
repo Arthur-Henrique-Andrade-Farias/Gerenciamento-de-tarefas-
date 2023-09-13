@@ -4,38 +4,59 @@ class UserController {
     newUser(req, res) {
         const { name, username, email, password } = req.body
 
+        
+
         database.insert({ name, username, email, password }).table("users").returning("userid").then(data => {
-            res.json({ message: "User registered", userid: data[0].userid })
+            res.status(201).json({ message: "User registered", userid: data[0].userid })
         }).catch(error => {
-            console.log(error)
+            if(error.code == '23505'){
+                res.status(409).json({message: "Email already registered"})
+            }
         })
     }
     login(req, res) {
-        const { email, password } = req.body
-
-        database.select("password").table("users").where({ email: email }).then(user => {
-            if (user.length > 0) {
-                user[0].password = user[0].password.trim()
-                if (password == user[0].password) {
-                    res.json({ message: "Accepted" })
+        if(req.session.authenticated){
+            res.status(200).json({ message: "Login Accepted"})
+        }else{
+            const { email, password } = req.body
+            database.select("password").select("userid").table("users").where({ email: email }).then(user => {
+                if (user.length > 0) {
+                    user[0].password = user[0].password.trim()
+                    if (password == user[0].password) {
+                        req.session.authenticated = true
+                        req.session.userid = user[0].userid
+                        res.status(200).json({ message: "Login Accepted"})
+                    } else {
+                        res.status(401).json({ message: "Wrong password" })
+                    }
                 } else {
-                    res.json({ message: "Wrong password" })
+                    res.status(404).json({ message: "User Not Found" })
                 }
-            } else {
-                res.json({ message: "User Not Found" })
-            }
-        }).catch(error => {
-            console.log(error)
-        })
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+
+
     }
     removeUser(req, res){
         const { name, username, email, password } = req.body
-        database('users').where({email: email, username:username, name:name, password:password}).del()
-        .then(user => {
-            res.json({message: "User Removed"})
+
+        database('users').where({email: email, username:username, name:name, password:password}).returning('userid').then(userid => {
+            userid = userid[0].userid
+            database('tasks').where({userid: userid}).del().catch(error => {
+                console.log(error)
+            })
+
+            database('users').where({userid: userid}).del().then(
+                res.sendStatus(200).json({message: "User Removed"})
+            ).catch(error => {
+                console.log(error)
+            })
         }).catch(error => {
-            console.log|(error)
+            console.log(error)
         })
+
     }
 }
 
