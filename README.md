@@ -1,2 +1,10 @@
 # Trabalho-de-Eng-Soft
-Trabalho sobre gerenciamento de tarefas utilizando JavaScript e as tecnologias Scrum.
+
+Aplicativo Web para gerenciamento de tarefas.
+Desenvolvido utilizando as seguintes tecnologias:
+  Nodejs
+  Vuejs
+  Expressjs
+  Postgresql
+
+Desenvolvido utilizando a metodologia Scrum
